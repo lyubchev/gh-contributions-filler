@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace gh_contributions_filler
 {
@@ -44,7 +42,7 @@ namespace gh_contributions_filler
 
         public static string LoadUserSettings()
         {
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"gh-contributions-filler");
+            string path = @"gh-contributions-filler";
             return !Directory.Exists(path) ? "" : File.ReadAllText(Path.Combine(path, @"\config.txt"));
         }
     }

@@ -10,6 +10,7 @@ namespace gh_contributions_filler
             string username = "";
             string email = "";
             CommandManager cm;
+            Console.Title = "GitHub Contributions Filler v1.0";
             Console.BufferHeight = 30;
             Console.WriteLine(@"
    _____   _   _     _    _           _     

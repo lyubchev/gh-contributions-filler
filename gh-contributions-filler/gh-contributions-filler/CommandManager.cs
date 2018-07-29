@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using System.Text;
 
 namespace gh_contributions_filler
 {
@@ -65,7 +63,7 @@ namespace gh_contributions_filler
                     {
                         if (command.Split('/').Length == 4) // IF THE INPUT DATE CONTAINS FOR SLASHES "/" : EXAMPLE 07/03/2018/7 THE NUMBER AFTER THE YEAR INDICATES HOW MANY DAYS AFTER THIS DATE SHOULD BE FILLED UP
                         {
-                            if (DateTime.TryParse(command.Substring(0, command.LastIndexOf('/')), out date))
+                            if (DateTime.TryParse(command.Substring(0, command.LastIndexOf('/')), out date)) // GETS THE NORMAL DATE
                             {
                                 for (int i = 0; i < int.Parse(command.Split('/')[3]); i++)
                                 {
@@ -75,7 +73,7 @@ namespace gh_contributions_filler
                             else
                             {
                                 Console.WriteLine("Invalid date!");
-                                break;
+                                return;
                             }
                         }
                     }
@@ -107,7 +105,6 @@ namespace gh_contributions_filler
 
                             Commit commit = repo.Commit("Dummit!", author, committer);
                         }
-
                     }
                 }
             }
