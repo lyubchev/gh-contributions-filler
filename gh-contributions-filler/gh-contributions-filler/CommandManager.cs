@@ -54,6 +54,7 @@ namespace gh_contributions_filler
                 while ((command = Console.ReadLine()) != "finish fill")
                 {
                     DateTime date;
+                    if (command == "") break;
                     command = command.Trim().Replace(' ', '/');
                     if (DateTime.TryParse(command + " 18:00:00", out date))
                     {
