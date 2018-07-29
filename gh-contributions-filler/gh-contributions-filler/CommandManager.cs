@@ -9,7 +9,7 @@ namespace gh_contributions_filler
 {
     class CommandManager
     {
-        public CommandManager(string command)
+        public CommandManager(string command, string username, string email)
         {
             List<DateTime> dates = new List<DateTime>();
             switch (command)
@@ -17,7 +17,7 @@ namespace gh_contributions_filler
                 case "help":
                     Console.WriteLine(@" fill help - Gives information about starting a fill session");
                     Console.WriteLine(@" run fill - Starts new session");
-                    Console.WriteLine(@" end fill - Ends current session");
+                    Console.WriteLine(@" finish fill - Ends current session");
                     Console.WriteLine(@" clear - Clears the console");
                     Console.WriteLine(@" about - Gives information about the project");
                     Console.WriteLine(@" about auth - Gives information about the author");
@@ -27,14 +27,16 @@ namespace gh_contributions_filler
                     Console.WriteLine(@"After starting a new session start typing the dates which you are willing to fill in the GitHub calendar.");
                     Console.WriteLine(@"Press enter after each date!");
                     Console.WriteLine(@"Valid date formats: MM/DD/YYYY");
-                    Console.WriteLine(@"After you are done typing the dates, use end fill to end the current session");
+                    Console.WriteLine(@"After you are done typing the dates, use ""finish fill"" to end the current session");
                     break;
                 case "run fill":
+                    Console.WriteLine(@"Starting session...");
+                    Util.RestartConsole();
                     Console.WriteLine(@"Enter dates...");
                     DatesInsertion();
                     break;
                 case "clear":
-                    RestartConsole();
+                    Util.RestartConsole();
                     break;
                 case "about":
                     Console.WriteLine("GitHub Contributions Filler v1.0");
@@ -46,21 +48,45 @@ namespace gh_contributions_filler
                     Console.WriteLine("GitHub: https://github.com/IMPZERO");
                     break;
                 default:
-                    Console.WriteLine(@"Invalid command, use ""help"" for valid commands");
+                    Console.WriteLine(@"Invalid command, use ""help"" to see valid commands");
                     break;
             }
-            void DatesInsertion() 
+            void DatesInsertion()
             {
-                while ((command = Console.ReadLine()) != "end fill")
+                while ((command = Console.ReadLine()) != "finish fill")
                 {
-                    DateTime date = DateTime.Parse(command + " 18:00:00");
-                    dates.Add(date);
+                    DateTime date;
+                    command = command.Trim().Replace(' ', '/');
+                    if (DateTime.TryParse(command + " 18:00:00", out date))
+                    {
+                        dates.Add(date);
+                    }
+                    else
+                    {
+                        if (command.Split('/').Length == 4) // IF THE INPUT DATE CONTAINS FOR SLASHES "/" : EXAMPLE 07/03/2018/7 THE NUMBER AFTER THE YEAR INDICATES HOW MANY DAYS AFTER THIS DATE SHOULD BE FILLED UP
+                        {
+                            if (DateTime.TryParse(command.Substring(0, command.LastIndexOf('/')), out date))
+                            {
+                                for (int i = 0; i < int.Parse(command.Split('/')[3]); i++)
+                                {
+                                    dates.Add(date.AddDays(i));
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid date!");
+                                break;
+                            }
+                        }
+                    }
                 }
+                Console.Write("Contributions per day: ");
+                int amount = int.Parse(Console.ReadLine());
+                Commit(amount);
                 Console.WriteLine(@"Ending session...");
-                CommitDates();
-                RestartConsole();
+                Util.RestartConsole();
             }
-            void CommitDates()
+            void Commit(int commitsPerDay)
             {
                 string folderName = Util.RandomString(10);
                 Directory.CreateDirectory(folderName);
@@ -70,32 +96,20 @@ namespace gh_contributions_filler
                 {
                     foreach (var date in dates)
                     {
-                        string content = $"I ❤ GitHub! {date.ToString()}";
-                        File.AppendAllText(Path.Combine(repo.Info.WorkingDirectory, "README.md"), content);
-                        repo.Index.Add("README.md");
-                        Commands.Stage(repo, "*");
-                        Signature author = new Signature("IMPZERO", "lyubo_2317@abv.bg", date);
-                        Signature committer = author;
+                        for (int i = 0; i < commitsPerDay; i++)
+                        {
+                            string content = $"I ❤ GitHub! {date.ToString()}{Environment.NewLine}";
+                            File.AppendAllText(Path.Combine(repo.Info.WorkingDirectory, "README.md"), content);
+                            repo.Index.Add("README.md");
+                            Commands.Stage(repo, "*");
+                            Signature author = new Signature(username, email, date);
+                            Signature committer = author;
 
-                        Commit commit = repo.Commit("Dummit!", author, committer);
+                            Commit commit = repo.Commit("Dummit!", author, committer);
+                        }
 
                     }
                 }
-            }
-            void RestartConsole()
-            {
-                Console.Clear();
-                Console.WriteLine(@"
-   _____   _   _     _    _           _     
-  / ____| (_) | |   | |  | |         | |    
- | |  __   _  | |_  | |__| |  _   _  | |__  
- | | |_ | | | | __| |  __  | | | | | | '_ \ 
- | |__| | | | | |_  | |  | | | |_| | | |_) |
-  \_____| |_|  \__| |_|  |_|  \__,_| |_.__/ 
-
- CONTRIBUTIONS FILLER V1.0
-");
-                Console.WriteLine(@"Type ""help"" for commands" + Environment.NewLine);
             }
         }
     }
