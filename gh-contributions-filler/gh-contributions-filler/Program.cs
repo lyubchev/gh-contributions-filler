@@ -23,9 +23,10 @@ namespace gh_contributions_filler
             userInput = Console.ReadLine();
             if(userInput == "help")
             {
-                Console.WriteLine(@" run help - Gives information about starting a fill session");
+                Console.WriteLine(@" fill help - Gives information about starting a fill session");
                 Console.WriteLine(@" run fill - Starts new session");
                 Console.WriteLine(@" end fill - Ends current session");
+                Console.WriteLine(@" clear - Clears the console");
                 Console.WriteLine(@" about - Gives information about the project");
                 Console.WriteLine(@" about auth - Gives information about the author");
             }
