@@ -13,8 +13,25 @@ namespace gh_contributions_filler
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
-        public static void RestartConsole()
+        public static void RestartConsole(out string username, out string email)
         {
+            
+
+            if (Util.LoadUserSettings() == "")
+            {
+                Console.WriteLine(@"Configure your account settings");
+                Console.Write(@"Username: ");
+                username = Console.ReadLine();
+                Console.Write(@"Email: ");
+                email = Console.ReadLine();
+                Console.WriteLine(@"Configuring settings...");
+                Util.SaveUserSettings(username, email);
+            }
+            else
+            {
+                username = Util.LoadUserSettings().Split(Environment.NewLine)[0];
+                email = Util.LoadUserSettings().Split(Environment.NewLine)[1];
+            }
             Console.Clear();
             Console.WriteLine(@"
    _____   _   _     _    _           _     
@@ -43,7 +60,13 @@ namespace gh_contributions_filler
         public static string LoadUserSettings()
         {
             string path = @"gh-contributions-filler";
-            return !Directory.Exists(path) ? "" : File.ReadAllText(Path.Combine(path, @"\config.txt"));
+            return !Directory.Exists(path) ? "" : File.ReadAllText(Path.Combine(path, @"config.txt"));
+        }
+
+        public static void ResetUserSettings()
+        {
+            string path = @"gh-contributions-filler";
+            File.WriteAllText(Path.Combine(path, @"config.txt"), null);
         }
     }
 }

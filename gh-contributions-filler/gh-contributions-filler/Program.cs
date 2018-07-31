@@ -29,6 +29,7 @@ namespace gh_contributions_filler
                 username = Console.ReadLine();
                 Console.Write(@"Email: ");
                 email = Console.ReadLine();
+                Console.WriteLine(@"Configuring settings...");
                 Util.SaveUserSettings(username, email);
             }
             else
@@ -36,7 +37,7 @@ namespace gh_contributions_filler
                 username = Util.LoadUserSettings().Split(Environment.NewLine)[0];
                 email = Util.LoadUserSettings().Split(Environment.NewLine)[1];
             }
-            Util.RestartConsole();
+            Util.RestartConsole(out username, out email);
             while (true)
             {
                 userInput = Console.ReadLine();

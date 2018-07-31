@@ -13,28 +13,37 @@ namespace gh_contributions_filler
             switch (command)
             {
                 case "help":
-                    Console.WriteLine(@" fill help - Gives information about starting a fill session");
-                    Console.WriteLine(@" run fill - Starts new session");
-                    Console.WriteLine(@" finish fill - Ends current session");
-                    Console.WriteLine(@" clear - Clears the console");
-                    Console.WriteLine(@" about - Gives information about the project");
-                    Console.WriteLine(@" about auth - Gives information about the author");
+                    Console.WriteLine(@"    1. fill help - Gives information about starting a fill session");
+                    Console.WriteLine(@"    2. run fill - Starts new session");
+                    Console.WriteLine(@"    3. finish fill - Ends current session");
+                    Console.WriteLine(@"    4. clear - Clears the console");
+                    Console.WriteLine(@"    5. reset - Resets local user settings");
+                    Console.WriteLine(@"    6. about - Gives information about the project");
+                    Console.WriteLine(@"    7. about auth - Gives information about the author");
                     break;
                 case "fill help":
-                    Console.WriteLine(@"To start a new ""contribution filling"" session use ""run fill""");
-                    Console.WriteLine(@"After starting a new session start typing the dates which you are willing to fill in the GitHub calendar.");
-                    Console.WriteLine(@"Press enter after each date!");
-                    Console.WriteLine(@"Valid date formats: MM/DD/YYYY");
-                    Console.WriteLine(@"After you are done typing the dates, use ""finish fill"" to end the current session");
+                    Console.WriteLine(@"    To start a new ""contribution filling"" session use ""run fill""");
+                    Console.WriteLine(@"    After starting a new session start typing the dates which you are willing to fill in the GitHub calendar.");
+                    Console.WriteLine(@"    Press enter after each date!");
+                    Console.WriteLine(@"    Valid date formats: MM/DD/YYYY");
+                    Console.WriteLine(@"    After you are done typing the dates, use ""finish fill"" to end the current session");
                     break;
                 case "run fill":
                     Console.WriteLine(@"Starting session...");
-                    Util.RestartConsole();
+                    Util.RestartConsole(out username, out email);
                     Console.WriteLine(@"Enter dates...");
                     DatesInsertion();
                     break;
                 case "clear":
-                    Util.RestartConsole();
+                    Util.RestartConsole(out username, out email);
+                    break;
+                case "reset":
+                    Console.WriteLine("Resetting...");
+                    System.Threading.Thread.Sleep(1000);
+                    Util.ResetUserSettings();
+                    Console.WriteLine("Restarting Console...");
+                    System.Threading.Thread.Sleep(1000);
+                    Util.RestartConsole(out username, out email);
                     break;
                 case "about":
                     Console.WriteLine("GitHub Contributions Filler v1.0");
@@ -83,7 +92,7 @@ namespace gh_contributions_filler
                 int amount = int.Parse(Console.ReadLine());
                 Commit(amount);
                 Console.WriteLine(@"Ending session...");
-                Util.RestartConsole();
+                Util.RestartConsole(out username, out email);
             }
             void Commit(int commitsPerDay)
             {
