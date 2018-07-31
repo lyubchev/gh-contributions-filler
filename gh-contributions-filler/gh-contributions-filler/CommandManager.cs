@@ -10,6 +10,11 @@ namespace gh_contributions_filler
         public CommandManager(string command, string username, string email)
         {
             List<DateTime> dates = new List<DateTime>();
+            // 
+            // -p triangle 
+
+            List<string> patterns = new List<string>(){ "square", "rectangle", "triangle", "circle", "diagonal", "line", "random" };
+
             switch (command)
             {
                 case "help":
@@ -64,14 +69,13 @@ namespace gh_contributions_filler
                 {
                     DateTime date;
                     if (command == "") break;
-                    command = command.Trim().Replace(' ', '/');
                     if (DateTime.TryParse(command + " 18:00:00", out date))
                     {
                         dates.Add(date);
                     }
                     else
                     {
-                        if (command.Split('/').Length == 4) // IF THE INPUT DATE CONTAINS FOR SLASHES "/" : EXAMPLE 07/03/2018/7 THE NUMBER AFTER THE YEAR INDICATES HOW MANY DAYS AFTER THIS DATE SHOULD BE FILLED UP
+                        if (command.Split('/').Length == 4) // IF THE INPUT DATE CONTAINS FOUR SLASHES "/" : EXAMPLE 07/03/2018/7 THE NUMBER AFTER THE YEAR INDICATES HOW MANY DAYS AFTER THIS DATE SHOULD BE FILLED UP
                         {
                             if (DateTime.TryParse(command.Substring(0, command.LastIndexOf('/')), out date)) // GETS THE NORMAL DATE
                             {
@@ -85,7 +89,15 @@ namespace gh_contributions_filler
                                 Console.WriteLine("Invalid date!");
                                 return;
                             }
+
                         }
+                        //else if (command.Contains(patterns.Select(x => x))
+                        //{
+                        //    string pattern = command.Substring(command.LastIndexOf('/'));
+                        //    command = command.Substring(command.LastIndexOf('/'));
+                        //    DateTime.TryParse(command, out date);
+                        //    Util.ProcessPattern(pattern, date, ref dates);
+                        //}
                     }
                 }
                 Console.Write("Contributions per day: ");

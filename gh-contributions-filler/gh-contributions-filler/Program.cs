@@ -6,12 +6,16 @@ namespace gh_contributions_filler
     {
         static void Main(string[] args)
         {
+            foreach(var arg in args)
+            {
+                Console.WriteLine(arg);
+            }
             string userInput = "";
             string username = "";
             string email = "";
             CommandManager cm;
             Console.Title = "GitHub Contributions Filler v1.0";
-            Console.BufferHeight = 30;
+            
             Console.WriteLine(@"
    _____   _   _     _    _           _     
   / ____| (_) | |   | |  | |         | |    
